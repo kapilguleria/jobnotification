@@ -1,0 +1,281 @@
+openapi: 3.0.0
+info:
+  title: Project Management API's
+  description: A complete Project Management Software
+  version: 0.0.1
+servers:
+  - url: http://localhost:8000/api
+
+tags:
+  - name: auth
+    description: Pre-Login API's
+  - name: organisation
+    description: Organisation API's
+  - name: sales
+    description: Sales API.
+    
+paths:
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a new user
+      description: Register a new user
+      operationId: addUser
+      requestBody:
+        description: Create a new pet in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+
+  /auth/verifyOtp:
+    post:
+      tags: 
+        - auth
+      summary: Verify the OTP
+      description: Verify OTP
+      operationId: verifyOtp
+      requestBody:
+        description: Verify the OTP
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTP'
+        required: true
+      responses:
+        '200':
+          description: Successful operation  
+
+  /auth/resendOtp:
+    post:
+      tags: 
+        - auth
+      summary: Resend the OTP
+      description: Resend the OTP
+      operationId: resendOtp
+      requestBody:
+        description: resend otp
+        content:
+          application/json:
+            schema: 
+              required:
+                - email
+              type: object
+              properties:
+                email:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+  
+  /auth/signIn:
+    post:
+      tags:
+        - auth
+      summary: Sign in
+      description: Sign in
+      operationId: signin
+      requestBody:
+        description: Sign in
+        content:
+          application/json:
+            schema: 
+              required:
+                - email
+                - password
+              type: object
+              properties:
+                email:
+                  type: string
+                password: 
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+
+  /organisation/create:
+    post:
+      tags: 
+        - organisation
+      summary: Create Organisation
+      description: Create Organisation
+      operationId: createOrganisation
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Create Organisation
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - name
+              type: object
+              properties:
+                email:
+                  type: string
+                name: 
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+
+  /organisation/get/{id}:
+    get:
+      tags:
+        - organisation
+      summary: GET Organisation
+      description: GET Organisation
+      operationId: getOrganisation
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the user
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+
+  /sales/get:
+    get:
+      tags:
+        - sales
+      summary: Get Sales Lead
+      description: Get Sales Lead
+      operationId: GetSalesLead
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: name
+          in: query
+          description: The name of the RSS
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  /sales/projectUnderstanding:
+    post:
+      tags: 
+        - sales
+      summary: Project Desc
+      description: Project Desc
+      operationId: projectdesc
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Project Desc
+        content:
+          application/json:
+            schema:
+              required:
+                - content
+              type: object
+              properties:
+                content:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+  
+  /sales/create/rss:
+    post:
+      tags: 
+        - sales
+      summary: Create RSS
+      description: Create RSS
+      operationId: CreateRSS
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Create RSS
+        content:
+          application/json:
+            schema:
+              required:
+                - user_id
+                - name
+                - RSS
+              type: object
+              properties:
+                user_id:
+                  type: string
+                name: 
+                  type: string
+                RSS: 
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+
+  /sales/get/rss:
+    get:
+      tags: 
+        - sales
+      summary: GET RSS
+      description: GET RSS
+      operationId: getRss
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+
+  /sales/get/count/rss:
+    get:
+      tags: 
+        - sales
+      summary: GET count RSS
+      description: GET count RSS
+      operationId: getCountRss
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful operation
+       
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User: 
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+          example: "amr1313mk@yopmail.com"
+        password:
+          type: string
+          example: "12345"
+    OTP: 
+      required:
+        - email
+        - otp
+      type: object
+      properties:
+        email:
+          type: string
+        otp:
+          type: string
